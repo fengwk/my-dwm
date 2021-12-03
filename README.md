@@ -12,6 +12,12 @@
     sudo make clean install
     ```
 
+1. 安装渲染器
+
+    ```shell
+    sudo pacman -S picom
+    ```
+
 1. 配置`~/.xinitrc`
 
    ```shell
