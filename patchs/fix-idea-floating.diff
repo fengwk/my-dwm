@@ -1,0 +1,64 @@
+diff --git a/config.h b/config.h
+index bc0972a..10bf8f6 100644
+--- a/config.h
++++ b/config.h
+@@ -37,15 +37,17 @@ static const unsigned int alphas[][3]      = {
+ /* tagging */
+ static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+ 
++// https://dwm.suckless.org/customisation/rules/
+ static const Rule rules[] = {
+ 	/* xprop(1):
+ 	 *	WM_CLASS(STRING) = instance, class
+ 	 *	WM_NAME(STRING) = title
+ 	 */
+-	/* class      instance    title       tags mask     isfloating   monitor */
+-//	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
+-	{ "Gimp",     NULL,       NULL,       0,            0,           -1 },
+-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
++	/* class            instance title tags mask isfloating  monitor ignoretransient*/
++//	{ "Gimp",           NULL,    NULL, 0,        1,          -1,     0},
++	{ "Gimp",           NULL,    NULL, 0,        0,          -1,     0},
++//	{ "Firefox",        NULL,    NULL, 1 << 8,   0,          -1,     0},
++	{ "jetbrains-idea", NULL,    NULL, 0,        0,          -1,     1},
+ };
+ 
+ /* layout(s) */
+diff --git a/dwm.c b/dwm.c
+index 1d79662..960c536 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -113,7 +113,7 @@ struct Client {
+ 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
+ 	int bw, oldbw;
+ 	unsigned int tags;
+-	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
++	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, ignoretransient;
+ 	Client *next;
+ 	Client *snext;
+ 	Monitor *mon;
+@@ -166,6 +166,7 @@ typedef struct {
+ 	unsigned int tags;
+ 	int isfloating;
+ 	int monitor;
++    int ignoretransient;
+ } Rule;
+ 
+ typedef struct Systray   Systray;
+@@ -375,6 +376,7 @@ applyrules(Client *c)
+ 		&& (!r->instance || strstr(instance, r->instance)))
+ 		{
+ 			c->isfloating = r->isfloating;
++            c->ignoretransient = r->ignoretransient;
+ 			c->tags |= r->tags;
+ 			for (m = mons; m && m->num != r->monitor; m = m->next);
+ 			if (m)
+@@ -1412,7 +1414,7 @@ propertynotify(XEvent *e)
+ 		switch(ev->atom) {
+ 		default: break;
+ 		case XA_WM_TRANSIENT_FOR:
+-			if (!c->isfloating && (XGetTransientForHint(dpy, c->win, &trans)) &&
++			if (!c->ignoretransient && !c->isfloating && (XGetTransientForHint(dpy, c->win, &trans)) &&
+ 				(c->isfloating = (wintoclient(trans)) != NULL))
+ 				arrange(c->mon);
+ 			break;
