@@ -34,6 +34,11 @@
    killall xbindkeys
    xbindkeys
 
+   # fix java application
+   export _JAVA_AWT_WM_NONREPARENTING=1
+   export AWT_TOOLKIT=MToolkit
+   wmname LG3D
+
    exec dwm
 
    # fix nvidia
@@ -75,3 +80,5 @@
 - 如果存在多个显示器，使用`alt+,`或`alt+.`可以在多个显示器间切换，使用`alt+shift+,`或`alt+shift+.`可以将当前指示的窗口移动到另一个显示器中。
 
 - 使用`alt+p`可以打开dmenu。
+
+- 使用`alt+f`可以切换到浮动模式（><>），也就是鼠标可以拖动窗口的模式，使用`alt+t`切换为平铺模式（[]=），在一些特殊的场景下由于可能导致dwm识别模式失败，使用`alt+shift+space`可以开关浮动模式。
