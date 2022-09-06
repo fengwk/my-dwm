@@ -65,7 +65,15 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
+/* 
+ * xev命令可以获取keycode
+ * xmodmap命令可以查看所有modkey
+ *
+ * Mod1Mask 是alt键
+ * Mod4Mask 是win键
+ */
 #define MODKEY Mod1Mask
+// #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
